@@ -15,6 +15,21 @@ export interface StageDetail {
   content: string;
 }
 
+export interface DetailedContent {
+  title: string;
+  sections: {
+    title: string;
+    type: 'text' | 'architecture' | 'code' | 'table' | 'list';
+    content?: string[];
+    architecture?: {
+      steps: string[];
+    };
+    codeSnippet?: CodeSnippet;
+    table?: TableData;
+    list?: string[];
+  }[];
+}
+
 export interface Stage {
   id: string;
   title: string;
@@ -24,6 +39,7 @@ export interface Stage {
   codeSnippet?: CodeSnippet;
   table?: TableData;
   dependencies?: string[];
+  detailedContent?: DetailedContent;
 }
 
 export interface Quarter {

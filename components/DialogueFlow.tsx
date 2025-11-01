@@ -3,51 +3,62 @@ import {
   UserCircleIcon,
   DataIcon,
   CpuChipIcon,
-  FunnelIcon,
   ShieldCheckIcon,
   ChatBubbleBottomCenterTextIcon,
   ClipboardCheckIcon,
+  MagnifyingGlassPlusIcon,
 } from './Icons';
+
+interface DialogueFlowProps {
+    onNavigate: (stageId: string) => void;
+}
 
 const flowSteps = [
     {
         icon: UserCircleIcon,
         title: '1. Запрос пользователя и маскировка PII',
         description: 'Пользователь отправляет запрос. Все персональные данные (ПД) немедленно заменяются безопасными плейсхолдерами (например, `{phone_0}`) перед дальнейшей обработкой.',
+        stageId: 'q1s1',
+    },
+    {
+        icon: MagnifyingGlassPlusIcon,
+        title: '2. AI Query Optimizer',
+        description: 'Запрос обогащается синонимами и ключевыми словами для повышения полноты (recall) и точности поиска. Модуль автоматически генерирует несколько формулировок вопроса, чтобы найти наиболее релевантную информацию.',
+        stageId: 'q3s1_optimizer',
     },
     {
         icon: DataIcon,
-        title: '2. Поиск в базе знаний (RAG) и API',
+        title: '3. Поиск в базе знаний (RAG) и API',
         description: 'Система ищет в векторизованной базе знаний семантически релевантные фрагменты информации для ответа. При необходимости могут вызываться внешние API (например, CRM) или выполняться прямой поиск в SQL-базе для получения структурированных данных, например, при запросе номера телефона.',
+        stageId: 'q1s4',
     },
     {
         icon: CpuChipIcon,
-        title: '3. Ассистент А (Core): Генерация черновика',
-        description: 'Core-ассистент синтезирует найденную информацию в черновой ответ, дополняя его `evidence` — ссылками на источники и оценками уверенности.',
-    },
-    {
-        icon: FunnelIcon,
-        title: '4. Проверка №1: Фильтр уверенности',
-        description: 'Все источники с уверенностью ниже порогового значения (например, 80%) автоматически отбрасываются. Если надёжных источников не остаётся, запускается fallback-логика (уточняющий вопрос).',
+        title: '4. Генерация черновика и фильтр уверенности',
+        description: 'Core-ассистент синтезирует найденную информацию в черновой ответ, дополняя его `evidence` — ссылками на источники. На этом же этапе все источники с уверенностью ниже порогового значения (например, 80%) автоматически отбрасываются. Если надёжных источников не остаётся, запускается fallback-логика (уточняющий вопрос).',
+        stageId: 'q1s6',
     },
     {
         icon: ShieldCheckIcon,
-        title: '5. Проверка №2: Guard-LLM (Контроль фактов)',
+        title: '5. Проверка: Guard-LLM (Контроль фактов)',
         description: '(Опционально) Независимая QA-модель проверяет черновик ответа на соответствие источникам, чтобы предотвратить галлюцинации и фактические ошибки.',
+        stageId: 'q3s1',
     },
     {
         icon: ChatBubbleBottomCenterTextIcon,
         title: '6. Финальный ответ и демаскировка PII',
         description: 'Формируется итоговый, проверенный ответ. Безопасные плейсхолдеры заменяются на исходные персональные данные, чтобы пользователь получил естественный ответ.',
+        stageId: 'q2s3',
     },
     {
         icon: ClipboardCheckIcon,
         title: '7. Ответ пользователю и логирование',
         description: 'Пользователь получает полный и естественный ответ. Все метрики цикла (задержка, уверенность, срабатывание проверок) записываются в систему мониторинга для анализа.',
+        stageId: 'q2s2',
     },
 ];
 
-const FlowStep: React.FC<{ step: typeof flowSteps[0]; isLast: boolean }> = ({ step, isLast }) => (
+const FlowStep: React.FC<{ step: typeof flowSteps[0]; isLast: boolean; onNavigate: (stageId: string) => void; }> = ({ step, isLast, onNavigate }) => (
     <div className="flex">
         <div className="flex flex-col items-center mr-4">
             <div>
@@ -60,16 +71,25 @@ const FlowStep: React.FC<{ step: typeof flowSteps[0]; isLast: boolean }> = ({ st
         <div className="pb-10 pt-2">
             <h4 className="font-bold text-lg text-white mb-1">{step.title}</h4>
             <p className="text-slate-400">{step.description}</p>
+            {step.stageId && (
+                <button
+                    onClick={() => onNavigate(step.stageId)}
+                    className="group inline-flex items-center gap-2 mt-3 text-sky-400 hover:text-sky-300 font-semibold text-sm transition-colors"
+                >
+                    Подробнее об этапе
+                    <span className="transition-transform group-hover:translate-x-1">→</span>
+                </button>
+            )}
         </div>
     </div>
 );
 
 
-const DialogueFlow: React.FC = () => {
+const DialogueFlow: React.FC<DialogueFlowProps> = ({ onNavigate }) => {
     return (
         <div className="mt-4">
             {flowSteps.map((step, index) => (
-                <FlowStep key={index} step={step} isLast={index === flowSteps.length - 1} />
+                <FlowStep key={index} step={step} isLast={index === flowSteps.length - 1} onNavigate={onNavigate} />
             ))}
         </div>
     );

@@ -36,7 +36,11 @@ const KpiCard: React.FC<{
   );
 };
 
-const ProductStrategy: React.FC = () => {
+interface ProductStrategyProps {
+    onNavigate: (stageId: string) => void;
+}
+
+const ProductStrategy: React.FC<ProductStrategyProps> = ({ onNavigate }) => {
     const [isOpen, setIsOpen] = useState(true);
     const data = productStrategyData;
 
@@ -104,7 +108,7 @@ const ProductStrategy: React.FC = () => {
                         <div className="lg:col-span-3 my-6">
                              <Section title={data.dialogueArchitecture.title} icon={data.dialogueArchitecture.icon}>
                                 <div className="animate-fade-in">
-                                    <DialogueFlow />
+                                    <DialogueFlow onNavigate={onNavigate} />
                                 </div>
                             </Section>
                         </div>

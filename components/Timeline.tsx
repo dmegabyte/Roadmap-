@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface TimelineProps {
   activeQuarterId: number;
@@ -14,10 +14,29 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
     { id: 4, name: 'Q4', goal: 'Безопасность', milestone: 'Production Ready' },
   ];
 
+  const [isMoving, setIsMoving] = useState(false);
+  const initialMount = useRef(true);
+
+  useEffect(() => {
+    // This effect makes the glowing dot visible only during the progress bar transition.
+    // It's skipped on the initial mount so the dot doesn't appear on page load.
+    if (initialMount.current) {
+      initialMount.current = false;
+      return;
+    }
+
+    setIsMoving(true);
+    const timer = setTimeout(() => {
+      setIsMoving(false);
+    }, 1000); // Duration should match the progress bar's CSS transition
+
+    // Clean up the timer if the quarter changes again before the timeout completes
+    return () => clearTimeout(timer);
+  }, [activeQuarterId]);
+
   const activeIndex = activeQuarterId - 1;
   const itemWidthPercentage = 100 / quarters.length;
   const progressPercentage = (activeIndex * itemWidthPercentage) + (itemWidthPercentage / 2);
-
 
   return (
     <div className="w-full px-4 pt-8 pb-12">
@@ -30,7 +49,7 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
           className="absolute top-4 left-0 h-1 bg-gradient-to-r from-sky-500 to-violet-500 rounded-full transition-all duration-1000 ease-out"
           style={{ width: `${progressPercentage}%` }}
         >
-          {activeIndex >= 0 && <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-violet-400 ring-4 ring-violet-400/30"></div>}
+          <div className={`absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-violet-400 ring-4 ring-violet-400/30 transition-opacity duration-200 ${isMoving ? 'opacity-100' : 'opacity-0'}`}></div>
         </div>
 
         {/* Quarters and milestones */}
@@ -59,7 +78,7 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
                           ? 'bg-sky-400' 
                           : 'bg-slate-600 border-2 border-slate-500'
                     }`}>
-                    {(isActive || isCompleted) && <div className="absolute -inset-1 rounded-full bg-sky-400/30 animate-pulse-glow"></div>}
+                    {isActive && <div className="absolute -inset-1 rounded-full bg-sky-400/30 animate-pulse-glow"></div>}
                   </div>
                   
                   {/* Quarter labels */}

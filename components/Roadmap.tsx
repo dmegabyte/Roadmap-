@@ -1,38 +1,34 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Quarter } from '../types';
 import StageCard from './StageCard';
 import Timeline from './Timeline';
 
 interface RoadmapProps {
   data: Quarter[];
+  activeQuarterId: number;
+  onQuarterSelect: (id: number) => void;
+  activeStageIndex: number;
+  onStageSelect: (index: number) => void;
 }
 
-const Roadmap: React.FC<RoadmapProps> = ({ data }) => {
-  const [activeQuarterId, setActiveQuarterId] = useState<number>(1);
-  const [activeStageIndex, setActiveStageIndex] = useState<number>(0);
-  
+const Roadmap: React.FC<RoadmapProps> = ({ data, activeQuarterId, onQuarterSelect, activeStageIndex, onStageSelect }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const timelineRefs = useRef<Map<number, HTMLElement | null>>(new Map());
   const stageRefs = useRef<Map<string, HTMLElement | null>>(new Map());
 
   const activeQuarter = data.find(q => q.id === activeQuarterId);
 
-  const handleQuarterSelect = (id: number) => {
-    setActiveQuarterId(id);
-    setActiveStageIndex(0);
-  };
-  
   return (
     <div ref={containerRef} className="relative border border-slate-700/80 rounded-xl bg-slate-800/50 shadow-2xl shadow-black/30 backdrop-blur-sm">
       <Timeline 
         activeQuarterId={activeQuarterId}
-        onQuarterSelect={handleQuarterSelect}
+        onQuarterSelect={onQuarterSelect}
         timelineRefs={timelineRefs}
       />
       
       {activeQuarter && (
         <div className="p-6 pt-0 animate-fade-in border-t border-slate-700/80 relative z-10">
-          <div className="my-16">
+          <div className="mt-20 mb-12">
             <h2 className="text-xl md:text-2xl font-bold text-sky-400">
               Q{activeQuarter.id}: <span className="text-white">{activeQuarter.title}</span>
             </h2>
@@ -50,7 +46,7 @@ const Roadmap: React.FC<RoadmapProps> = ({ data }) => {
                     <button
                       key={stage.id}
                       ref={el => stageRefs.current.set(stage.id, el)}
-                      onClick={() => setActiveStageIndex(index)}
+                      onClick={() => onStageSelect(index)}
                       className={`w-full text-left p-3 rounded-md transition-all duration-200 flex items-center ${
                         isActive
                           ? 'text-violet-300 animate-bg-pulse'

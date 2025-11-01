@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/prism';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -17,42 +18,61 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ snippet }) => {
       setTimeout(() => setCopied(false), 2000);
     });
   };
+  
+  // A mapping for more user-friendly language names.
+  const languageMap: { [key: string]: string } = {
+    json: 'JSON',
+    diff: 'Diff',
+    text: 'Plain Text',
+  };
+  
+  const displayName = languageMap[snippet.language] || snippet.language;
 
   return (
     <div className="mt-4">
-        <div className="bg-slate-900/70 rounded-md border border-slate-700 group relative text-base">
-            <div className="absolute top-2 right-2 z-10">
-                <button 
-                    onClick={handleCopy}
-                    className="p-1.5 rounded-md bg-slate-700/50 text-slate-400 hover:bg-slate-600 hover:text-white transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
-                    aria-label="Copy code"
-                >
-                    {copied ? (
-                        <ClipboardCheckIcon className="w-5 h-5 text-green-400" />
-                    ) : (
-                        <ClipboardIcon className="w-5 h-5" />
-                    )}
-                </button>
-            </div>
-            <SyntaxHighlighter
-                language={snippet.language}
-                style={vscDarkPlus}
-                customStyle={{
-                    backgroundColor: 'transparent',
-                    margin: 0,
-                    padding: '1rem',
-                    overflowX: 'auto',
-                }}
-                codeTagProps={{
-                    style: {
-                        fontFamily: 'inherit',
-                        fontSize: '0.9rem',
-                    },
-                }}
-            >
-                {String(snippet.code).trim()}
-            </SyntaxHighlighter>
+      <div className="bg-slate-900/70 rounded-lg border border-slate-700 text-base overflow-hidden shadow-lg shadow-black/20">
+        <div className="flex justify-between items-center px-4 py-1.5 bg-slate-800/60 border-b border-slate-700">
+          <span className="text-xs font-semibold uppercase text-sky-300 tracking-wider font-mono">
+            {displayName}
+          </span>
+          <button 
+            onClick={handleCopy}
+            className="flex items-center gap-2 p-1.5 rounded-md bg-slate-700/50 text-slate-400 hover:bg-slate-600 hover:text-white transition-all"
+            aria-label="Copy code"
+          >
+            {copied ? (
+              <>
+                <ClipboardCheckIcon className="w-5 h-5 text-green-400" />
+                <span className="text-xs text-green-400">Copied!</span>
+              </>
+            ) : (
+              <>
+                <ClipboardIcon className="w-5 h-5" />
+                <span className="text-xs hidden sm:inline">Copy</span>
+              </>
+            )}
+          </button>
         </div>
+        <SyntaxHighlighter
+          language={snippet.language}
+          style={vscDarkPlus}
+          customStyle={{
+            backgroundColor: 'transparent',
+            margin: 0,
+            padding: '1rem',
+            overflowX: 'auto',
+          }}
+          codeTagProps={{
+            style: {
+              fontFamily: 'inherit',
+              fontSize: '0.9rem',
+              lineHeight: '1.5',
+            },
+          }}
+        >
+          {String(snippet.code).trim()}
+        </SyntaxHighlighter>
+      </div>
     </div>
   );
 };

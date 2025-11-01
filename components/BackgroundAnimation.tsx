@@ -92,14 +92,6 @@ const BackgroundAnimation: React.FC = () => {
                     this.speedX -= (dx_mouse / distance_mouse) * force * forceFactor;
                     this.speedY -= (dy_mouse / distance_mouse) * force * forceFactor;
                 }
-
-                // Bounce off canvas edges
-                if (this.x + this.size > canvas.width || this.x - this.size < 0) {
-                    this.speedX *= -1;
-                }
-                if (this.y + this.size > canvas.height || this.y - this.size < 0) {
-                    this.speedY *= -1;
-                }
                 
                 // Cap speed
                 const speed = Math.sqrt(this.speedX*this.speedX + this.speedY*this.speedY);
@@ -125,7 +117,7 @@ const BackgroundAnimation: React.FC = () => {
         const init = () => {
             if(!canvas) return;
             particles = [];
-            const numberOfParticles = (canvas.width * canvas.height) / 9000;
+            const numberOfParticles = (canvas.width * canvas.height) / 7000;
             for (let i = 0; i < numberOfParticles; i++) {
                 particles.push(new Particle());
             }
