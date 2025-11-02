@@ -1,9 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Suspense, lazy } from 'react';
 import Header from './components/Header';
-import Roadmap from './components/Roadmap';
-import ProductStrategy from './components/ProductStrategy';
 import { roadmapData } from './data/roadmapData';
 import BackgroundAnimation from './components/BackgroundAnimation';
+
+const ProductStrategy = lazy(() => import('./components/ProductStrategy'));
+const Roadmap = lazy(() => import('./components/Roadmap'));
+
+const LoadingFallback: React.FC<{ message: string }> = ({ message }) => (
+  <div className="text-center p-12 text-slate-400 animate-pulse">{message}</div>
+);
 
 const App: React.FC = () => {
   const [activeQuarterId, setActiveQuarterId] = useState<number>(1);
@@ -54,15 +59,19 @@ const App: React.FC = () => {
       >
         <main className="container mx-auto px-4 py-8 md:py-16 space-y-12">
           <Header />
-          <ProductStrategy onNavigate={handleNavigateToStage} />
+          <Suspense fallback={<LoadingFallback message="Загрузка стратегии..." />}>
+            <ProductStrategy onNavigate={handleNavigateToStage} />
+          </Suspense>
           <div ref={roadmapRef} className="scroll-mt-4">
-            <Roadmap 
-              data={roadmapData}
-              activeQuarterId={activeQuarterId}
-              onQuarterSelect={handleQuarterSelect}
-              activeStageIndex={activeStageIndex}
-              onStageSelect={setActiveStageIndex}
-            />
+            <Suspense fallback={<LoadingFallback message="Загрузка дорожной карты..." />}>
+              <Roadmap 
+                data={roadmapData}
+                activeQuarterId={activeQuarterId}
+                onQuarterSelect={handleQuarterSelect}
+                activeStageIndex={activeStageIndex}
+                onStageSelect={setActiveStageIndex}
+              />
+            </Suspense>
           </div>
         </main>
         <footer className="text-center py-6 text-slate-500 text-sm">

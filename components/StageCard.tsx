@@ -1,10 +1,11 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { Stage } from '../types';
 import CodeSnippet from './CodeSnippet';
 import { SearchIcon, CheckCircleIcon, DocsIcon } from './Icons';
-import Modal from './Modal';
 import DetailedDocumentation from './DetailedDocumentation';
+
+const Modal = lazy(() => import('./Modal'));
 
 // Helper function to parse and style inline code blocks marked with backticks
 const renderWithInlineCode = (text: string) => {
@@ -195,10 +196,12 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
           )}
         </div>
       </div>
-      {stage.detailedContent && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={stage.detailedContent.title}>
-            <DetailedDocumentation content={stage.detailedContent} />
-        </Modal>
+      {isModalOpen && stage.detailedContent && (
+        <Suspense fallback={null}>
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={stage.detailedContent.title}>
+                <DetailedDocumentation content={stage.detailedContent} />
+            </Modal>
+        </Suspense>
       )}
     </>
   );
