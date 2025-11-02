@@ -32,7 +32,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ snippet }) => {
     <div className="mt-4">
       <div className="bg-slate-900/70 rounded-lg border border-slate-700 text-base overflow-hidden shadow-lg shadow-black/20">
         <div className="flex justify-between items-center px-4 py-1.5 bg-slate-800/60 border-b border-slate-700">
-          <span className="text-xs font-semibold uppercase text-sky-300 tracking-wider font-mono">
+          <span className="text-sm font-semibold uppercase text-sky-300 tracking-wider font-mono">
             {displayName}
           </span>
           <button 
@@ -43,12 +43,12 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ snippet }) => {
             {copied ? (
               <>
                 <ClipboardCheckIcon className="w-5 h-5 text-green-400" />
-                <span className="text-xs text-green-400">Copied!</span>
+                <span className="text-sm text-green-400">Copied!</span>
               </>
             ) : (
               <>
                 <ClipboardIcon className="w-5 h-5" />
-                <span className="text-xs hidden sm:inline">Copy</span>
+                <span className="text-sm hidden sm:inline">Copy</span>
               </>
             )}
           </button>
@@ -65,7 +65,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ snippet }) => {
           codeTagProps={{
             style: {
               fontFamily: 'inherit',
-              fontSize: '0.9rem',
+              fontSize: '1rem',
               lineHeight: '1.5',
             },
           }}

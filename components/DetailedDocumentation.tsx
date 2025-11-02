@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DetailedContent } from '../types';
 import CodeSnippet from './CodeSnippet';
@@ -17,29 +18,32 @@ const ArchitectureDiagram: React.FC<{ steps: string[] }> = ({ steps }) => (
               </div>
               {/* Content */}
               <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4 shadow-md transition-colors hover:border-sky-500/50">
-                  <p className="text-slate-200 text-base">{step}</p>
+                  <p className="text-lg text-slate-200">{parseSimpleMarkdown(step)}</p>
               </div>
           </div>
       ))}
     </div>
 );
 
-// Helper function to parse simple markdown-like bold syntax (**text**)
-const renderMarkdownBold = (text: string) => {
-    // Split the text by the bold syntax, keeping the delimiters
-    const parts = text.split(/(\*\*.*?\*\*)/g);
-    return (
-        <>
-            {parts.map((part, index) => {
-                // If the part matches the bold syntax, render it as a <strong> element
-                if (part.startsWith('**') && part.endsWith('**')) {
-                    return <strong key={index} className="font-semibold text-slate-100">{part.slice(2, -2)}</strong>;
-                }
-                // Otherwise, return the text as is
-                return part;
-            })}
-        </>
-    );
+// Helper function to parse and style simple markdown like **bold**, *italic*, and `code`
+const parseSimpleMarkdown = (text: string) => {
+  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`)/g);
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={index} className="font-semibold text-slate-100">{part.slice(2, -2)}</strong>;
+        }
+        if (part.startsWith('*') && part.endsWith('*')) {
+            return <em key={index} className="italic text-slate-300">{part.slice(1, -1)}</em>;
+        }
+        if (part.startsWith('`') && part.endsWith('`')) {
+          return <code key={index} className="font-mono text-sky-300 bg-slate-700/50 px-1.5 py-0.5 rounded text-sm mx-1">{part.slice(1, -1)}</code>;
+        }
+        return part;
+      })}
+    </>
+  );
 };
 
 
@@ -48,11 +52,11 @@ const DetailedDocumentation: React.FC<DetailedDocumentationProps> = ({ content }
     <div className="space-y-8">
       {content.sections.map((section, index) => (
         <section key={index} aria-labelledby={`section-title-${index}`}>
-          <h3 id={`section-title-${index}`} className="text-lg font-semibold text-sky-400 mb-4 border-b border-slate-700 pb-2">
+          <h3 id={`section-title-${index}`} className="text-xl font-semibold text-sky-400 mb-4 border-b border-slate-700 pb-2">
             {section.title}
           </h3>
-          <div className="text-slate-300 space-y-4 leading-relaxed">
-            {section.type === 'text' && section.content?.map((p, i) => <p key={i}>{p}</p>)}
+          <div className="text-lg text-slate-300 space-y-4 leading-relaxed">
+            {section.type === 'text' && section.content?.map((p, i) => <p key={i}>{parseSimpleMarkdown(p)}</p>)}
             
             {section.type === 'architecture' && section.architecture && (
                 <ArchitectureDiagram steps={section.architecture.steps} />
@@ -65,7 +69,7 @@ const DetailedDocumentation: React.FC<DetailedDocumentationProps> = ({ content }
                     {section.list.map((item, i) => (
                         <li key={i} className="flex items-start">
                              <CheckCircleIcon className="w-5 h-5 text-green-400 mr-3 mt-1 shrink-0" />
-                            <span>{renderMarkdownBold(item)}</span>
+                            <span>{parseSimpleMarkdown(item)}</span>
                         </li>
                     ))}
                 </ul>
@@ -73,7 +77,7 @@ const DetailedDocumentation: React.FC<DetailedDocumentationProps> = ({ content }
 
             {section.type === 'table' && section.table && (
                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-base border-collapse">
+                    <table className="w-full text-left text-lg border-collapse">
                         <thead className="bg-slate-900/50">
                             <tr>
                                 {section.table.headers.map((header, hIndex) => (

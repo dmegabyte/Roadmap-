@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 
 interface TimelineProps {
@@ -39,7 +40,7 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
   const progressPercentage = (activeIndex * itemWidthPercentage) + (itemWidthPercentage / 2);
 
   return (
-    <div className="w-full px-4 pt-8 pb-12">
+    <nav aria-label="Временная шкала кварталов" className="w-full px-4 pt-8 pb-12">
       <div className="relative">
         {/* Timeline track */}
         <div className="absolute top-4 left-0 w-full h-1 bg-slate-700 rounded-full"></div>
@@ -68,7 +69,8 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
                 <button
                   onClick={() => onQuarterSelect(q.id)}
                   className="w-full group flex flex-col items-center p-2 rounded-lg transition-colors hover:bg-slate-700/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-sky-400"
-                  aria-pressed={isActive}
+                  aria-current={isActive ? 'step' : undefined}
+                  aria-controls="quarter-content-panel"
                 >
                   {/* Quarter circle */}
                   <div className={`relative w-5 h-5 rounded-full z-10 transition-all duration-500 group-hover:scale-110 ${
@@ -83,15 +85,15 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
                   
                   {/* Quarter labels */}
                   <div className="text-center mt-4">
-                    <div className={`font-bold transition-colors text-base md:text-lg ${isActive ? 'text-sky-300' : isCompleted ? 'text-sky-400' : 'text-slate-400'} ${!isActive ? 'group-hover:text-sky-300' : ''}`}>{q.name}</div>
-                    <div className={`text-slate-400 mt-1 min-h-[2.5rem] text-sm md:text-base transition-colors ${!isActive ? 'group-hover:text-slate-300' : ''}`}>{q.goal}</div>
+                    <div className={`font-bold transition-colors text-lg md:text-xl ${isActive ? 'text-sky-300' : isCompleted ? 'text-sky-400' : 'text-slate-400'} ${!isActive ? 'group-hover:text-sky-300' : ''}`}>{q.name}</div>
+                    <div className={`text-slate-400 mt-1 min-h-[2.5rem] text-base md:text-lg transition-colors ${!isActive ? 'group-hover:text-slate-300' : ''}`}>{q.goal}</div>
                   </div>
                 </button>
                 
                 {/* Milestone labels */}
                 {q.milestone && (
                   <div className="absolute top-full mt-8 md:mt-10 left-1/2 -translate-x-1/2">
-                    <div className={`font-semibold rounded-full px-3 py-1 border transition-colors duration-500 text-sm md:text-base whitespace-nowrap ${milestoneAchieved ? 'bg-violet-500/20 text-violet-300 border-violet-500/50 shadow-md shadow-violet-500/10' : 'bg-slate-700/50 text-slate-400 border-slate-600'}`}>
+                    <div className={`font-semibold rounded-full px-3 py-1 border transition-colors duration-500 text-base md:text-lg whitespace-nowrap ${milestoneAchieved ? 'bg-violet-500/20 text-violet-300 border-violet-500/50 shadow-md shadow-violet-500/10' : 'bg-slate-700/50 text-slate-400 border-slate-600'}`}>
                       {q.milestone}
                     </div>
                   </div>
@@ -101,7 +103,7 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
           })}
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

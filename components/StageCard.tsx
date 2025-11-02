@@ -7,20 +7,23 @@ import DetailedDocumentation from './DetailedDocumentation';
 
 const Modal = lazy(() => import('./Modal'));
 
-// Helper function to parse and style inline code blocks marked with backticks
-const renderWithInlineCode = (text: string) => {
-  const parts = text.split(/(`.*?`)/g);
+// Helper function to parse and style simple markdown like **bold**, *italic*, and `code`
+const parseSimpleMarkdown = (text: string) => {
+  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`)/g);
   return (
     <>
-      {parts.map((part, i) =>
-        part.startsWith('`') && part.endsWith('`') ? (
-          <code key={i} className="font-mono text-sky-300 bg-slate-700/50 px-1.5 py-0.5 rounded text-sm mx-1">
-            {part.slice(1, -1)}
-          </code>
-        ) : (
-          part
-        )
-      )}
+      {parts.map((part, i) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={i} className="font-semibold text-slate-100">{part.slice(2, -2)}</strong>;
+        }
+        if (part.startsWith('*') && part.endsWith('*')) {
+            return <em key={i} className="italic text-slate-300">{part.slice(1, -1)}</em>;
+        }
+        if (part.startsWith('`') && part.endsWith('`')) {
+          return <code key={i} className="font-mono text-sky-300 bg-slate-700/50 px-1.5 py-0.5 rounded text-sm mx-1">{part.slice(1, -1)}</code>;
+        }
+        return part;
+      })}
     </>
   );
 };
@@ -76,31 +79,34 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
       <div className="bg-slate-800/80 rounded-lg border border-slate-700 p-5 animate-fade-in">
         <div className="flex items-start mb-4">
           <stage.icon className="w-7 h-7 text-violet-400 mr-4 shrink-0 mt-1" />
-          <h3 className="text-xl font-semibold text-white">{stage.title}</h3>
+          <h3 className="text-2xl font-semibold text-white">{stage.title}</h3>
         </div>
         
         <div className="space-y-6">
           <div className="space-y-4">
             {stage.description.map((desc, i) => (
-              <p key={i} className="text-slate-300 leading-relaxed">{desc}</p>
+              <p key={i} className="text-lg text-slate-300 leading-loose">{parseSimpleMarkdown(desc)}</p>
             ))}
           </div>
           
           {stage.details && (
-               <div className="space-y-3 mt-5 pt-5 border-t border-slate-700/60">
+               <div className="space-y-6 mt-5 pt-5 border-t border-slate-700/60">
                   {stage.details.map((detail, i) => {
                     if (typeof detail === 'string') {
                       return (
                         <div key={i} className="flex items-start bg-slate-900/50 p-3 rounded-md border border-slate-700/80">
                             <CheckCircleIcon className="w-5 h-5 text-green-400 mr-3 mt-1 shrink-0" />
-                            <p className="text-slate-300 leading-relaxed">{renderWithInlineCode(detail)}</p>
+                            <p className="text-lg text-slate-300 leading-loose">{parseSimpleMarkdown(detail)}</p>
                         </div>
                       );
                     }
                     return (
-                      <div key={i} className="bg-slate-900/40 p-4 rounded-md border border-slate-700/80">
-                          <h4 className="font-semibold text-slate-100">{detail.title}</h4>
-                          <p className="text-slate-400 mt-1 leading-relaxed">{detail.content}</p>
+                      <div key={i}>
+                          <h4 className="text-xl font-semibold text-slate-100 flex items-center gap-x-3">
+                            <span className="w-2 h-2 bg-violet-400 transform rotate-45"></span>
+                            {detail.title}
+                          </h4>
+                          <p className="text-lg text-slate-300 mt-2 leading-loose">{parseSimpleMarkdown(detail.content)}</p>
                       </div>
                     );
                   })}
@@ -120,18 +126,18 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
                       placeholder="Фильтр по таблице..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"
+                      className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors text-lg"
                       aria-label="Фильтр по таблице"
                     />
                   </div>
                 </div>
               )}
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-base border-collapse">
+                <table className="w-full text-left text-lg border-collapse">
                   <thead className="bg-slate-800/60 hidden md:table-header-group">
                     <tr>
                       {stage.table.headers.map((header, index) => (
-                        <th key={index} className="p-3 font-semibold border-b border-slate-700 text-slate-300 uppercase text-xs tracking-wider">{header}</th>
+                        <th key={index} className="p-3 font-semibold border-b border-slate-700 text-slate-300 uppercase text-sm tracking-wider">{header}</th>
                       ))}
                     </tr>
                   </thead>
@@ -187,7 +193,7 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
             <div>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 border border-sky-500/50 text-sky-300 bg-sky-500/10 rounded-md hover:bg-sky-500/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-sky-500"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-sky-500/50 text-sky-300 bg-sky-500/10 rounded-md hover:bg-sky-500/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-sky-500 text-base"
               >
                 <DocsIcon className="w-5 h-5" />
                 Подробнее о модуле

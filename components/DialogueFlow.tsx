@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   UserCircleIcon,
@@ -23,36 +24,30 @@ const flowSteps = [
     {
         icon: MagnifyingGlassPlusIcon,
         title: '2. AI Query Optimizer',
-        description: 'Запрос обогащается синонимами и ключевыми словами для повышения полноты (recall) и точности поиска. Модуль автоматически генерирует несколько формулировок вопроса, чтобы найти наиболее релевантную информацию.',
-        stageId: 'q3s1_optimizer',
-    },
-    {
-        icon: DataIcon,
-        title: '3. Поиск в базе знаний (RAG) и API',
-        description: 'Система ищет в векторизованной базе знаний семантически релевантные фрагменты информации для ответа. При необходимости могут вызываться внешние API (например, CRM) или выполняться прямой поиск в SQL-базе для получения структурированных данных, например, при запросе номера телефона.',
-        stageId: 'q1s4',
-    },
-    {
-        icon: CpuChipIcon,
-        title: '4. Генерация черновика и фильтр уверенности',
-        description: 'Core-ассистент синтезирует найденную информацию в черновой ответ, дополняя его `evidence` — ссылками на источники. На этом же этапе все источники с уверенностью ниже порогового значения (например, 80%) автоматически отбрасываются. Если надёжных источников не остаётся, запускается fallback-логика (уточняющий вопрос).',
-        stageId: 'q1s6',
-    },
-    {
-        icon: ShieldCheckIcon,
-        title: '5. Проверка: Guard-LLM (Контроль фактов)',
-        description: '(Опционально) Независимая QA-модель проверяет черновик ответа на соответствие источникам, чтобы предотвратить галлюцинации и фактические ошибки.',
+        description: 'Запрос обогащается контекстом (сегмент, категория) и переформулируется, чтобы RAG-поиск мог найти наиболее релевантные документы.',
         stageId: 'q3s1',
     },
     {
+        icon: CpuChipIcon,
+        title: '3. Поиск, фильтрация и генерация ответа',
+        description: 'Система ищет релевантные фрагменты (RAG), отбрасывает источники с уверенностью ниже 80% и синтезирует черновой ответ. Если надёжных источников нет, запускается fallback-логика с уточняющим вопросом.',
+        stageId: 'q1s4',
+    },
+    {
+        icon: ShieldCheckIcon,
+        title: '4. Проверка: Guard-LLM (Контроль фактов)',
+        description: '(Опционально) Независимая QA-модель проверяет черновик ответа на соответствие источникам, чтобы предотвратить галлюцинации и фактические ошибки.',
+        stageId: 'q3s2',
+    },
+    {
         icon: ChatBubbleBottomCenterTextIcon,
-        title: '6. Финальный ответ и демаскировка PII',
+        title: '5. Финальный ответ и демаскировка PII',
         description: 'Формируется итоговый, проверенный ответ. Безопасные плейсхолдеры заменяются на исходные персональные данные, чтобы пользователь получил естественный ответ.',
         stageId: 'q2s3',
     },
     {
         icon: ClipboardCheckIcon,
-        title: '7. Ответ пользователю и логирование',
+        title: '6. Ответ пользователю и логирование',
         description: 'Пользователь получает полный и естественный ответ. Все метрики цикла (задержка, уверенность, срабатывание проверок) записываются в систему мониторинга для анализа.',
         stageId: 'q2s2',
     },
@@ -69,12 +64,12 @@ const FlowStep: React.FC<{ step: typeof flowSteps[0]; isLast: boolean; onNavigat
             {!isLast && <div className="w-px h-full bg-slate-600/70 my-2"></div>}
         </div>
         <div className="pb-10 pt-2">
-            <h4 className="font-bold text-lg text-white mb-1">{step.title}</h4>
-            <p className="text-slate-400">{step.description}</p>
+            <h4 className="font-bold text-xl text-white mb-1">{step.title}</h4>
+            <p className="text-lg text-slate-400">{step.description}</p>
             {step.stageId && (
                 <button
                     onClick={() => onNavigate(step.stageId)}
-                    className="group inline-flex items-center gap-2 mt-3 text-sky-400 hover:text-sky-300 font-semibold text-sm transition-colors"
+                    className="group inline-flex items-center gap-2 mt-3 text-sky-400 hover:text-sky-300 font-semibold text-base transition-colors"
                 >
                     Подробнее об этапе
                     <span className="transition-transform group-hover:translate-x-1">→</span>

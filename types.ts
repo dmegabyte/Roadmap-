@@ -57,6 +57,12 @@ export interface Persona {
 export interface PrioritizationItem {
   feature: string;
   rice: number;
+  reach: number;
+  impact: number;
+  confidence: number;
+  effort: number;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
 }
 
 export interface Kpi {

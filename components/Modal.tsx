@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -42,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
       
       <div className="relative z-10 w-full max-w-7xl max-h-[90vh] bg-slate-800 border border-slate-700 rounded-xl shadow-2xl shadow-black/50 flex flex-col animate-fade-in">
         <header className="flex items-center justify-between p-4 border-b border-slate-700 shrink-0">
-          <h2 id="modal-title" className="text-xl font-semibold text-white">
+          <h2 id="modal-title" className="text-2xl font-semibold text-white">
             {title}
           </h2>
           <button

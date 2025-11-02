@@ -13,7 +13,7 @@ const Header: React.FC = () => {
           Roadmap разработки AI-ассистента
         </h1>
       </div>
-      <p className="text-lg md:text-xl text-slate-400 max-w-4xl mx-auto">
+      <p className="text-xl text-slate-400 max-w-4xl mx-auto">
         Интерактивная визуализация четырехквартального плана по созданию готового к эксплуатации AI-ассистента, от подготовки данных до production-ready решения.
       </p>
     </header>
