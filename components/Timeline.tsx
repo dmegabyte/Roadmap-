@@ -8,10 +8,10 @@ interface TimelineProps {
 
 const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, timelineRefs }) => {
   const quarters = [
-    { id: 1, name: 'Q1', goal: 'Основа и данные', milestone: 'RAG-Ready Data' },
-    { id: 2, name: 'Q2', goal: 'Web-интерфейс', milestone: 'MVP Launch' },
-    { id: 3, name: 'Q3', goal: 'Интеграции', milestone: null },
-    { id: 4, name: 'Q4', goal: 'Безопасность', milestone: 'Production Ready' },
+    { id: 1, name: 'Q1', goal: 'Data & Foundation', milestone: 'RAG-Ready Data' },
+    { id: 2, name: 'Q2', goal: 'UI & Monitoring', milestone: 'MVP Launch' },
+    { id: 3, name: 'Q3', goal: 'Integrations & Bias Control', milestone: 'System Integration' },
+    { id: 4, name: 'Q4', goal: 'Maturity & Scale', milestone: 'Production Ready' },
   ];
 
   const [isMoving, setIsMoving] = useState(false);
@@ -49,7 +49,7 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
           className="absolute top-4 left-0 h-1 bg-gradient-to-r from-sky-500 to-violet-500 rounded-full transition-all duration-1000 ease-out"
           style={{ width: `${progressPercentage}%` }}
         >
-          <div className={`absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-violet-400 ring-4 ring-violet-400/30 transition-opacity duration-200 ${isMoving ? 'opacity-100' : 'opacity-0'}`}></div>
+          <div className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3 h-3 rounded-full bg-violet-400 ring-4 ring-violet-400/30 transition-opacity duration-200 ${isMoving ? 'opacity-100' : 'opacity-0'}`}></div>
         </div>
 
         {/* Quarters and milestones */}
@@ -90,8 +90,8 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
                 
                 {/* Milestone labels */}
                 {q.milestone && (
-                  <div className="absolute top-full mt-8 md:mt-10">
-                    <div className={`font-semibold rounded-full px-3 py-1 border transition-colors duration-500 text-sm md:text-base ${milestoneAchieved ? 'bg-violet-500/20 text-violet-300 border-violet-500/50 shadow-md shadow-violet-500/10' : 'bg-slate-700/50 text-slate-400 border-slate-600'}`}>
+                  <div className="absolute top-full mt-8 md:mt-10 left-1/2 -translate-x-1/2">
+                    <div className={`font-semibold rounded-full px-3 py-1 border transition-colors duration-500 text-sm md:text-base whitespace-nowrap ${milestoneAchieved ? 'bg-violet-500/20 text-violet-300 border-violet-500/50 shadow-md shadow-violet-500/10' : 'bg-slate-700/50 text-slate-400 border-slate-600'}`}>
                       {q.milestone}
                     </div>
                   </div>

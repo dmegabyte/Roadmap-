@@ -6,6 +6,24 @@ import { SearchIcon, CheckCircleIcon, DocsIcon } from './Icons';
 import Modal from './Modal';
 import DetailedDocumentation from './DetailedDocumentation';
 
+// Helper function to parse and style inline code blocks marked with backticks
+const renderWithInlineCode = (text: string) => {
+  const parts = text.split(/(`.*?`)/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.startsWith('`') && part.endsWith('`') ? (
+          <code key={i} className="font-mono text-sky-300 bg-slate-700/50 px-1.5 py-0.5 rounded text-sm mx-1">
+            {part.slice(1, -1)}
+          </code>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+};
+
 interface StageCardProps {
   stage: Stage;
 }
@@ -33,9 +51,20 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
       case 'Поле':
         return 'font-mono text-sky-300 font-semibold';
       case 'Тип':
+      case 'version':
         return 'font-mono text-sky-300';
       case 'Пример значения':
+      case 'accuracy':
+      case 'auto_ratio':
+      case 'semantic':
+      case 'coverage':
+      case 'hallucination':
         return 'font-mono text-emerald-300';
+      case 'latency':
+      case 'feedback':
+        return 'font-mono text-yellow-300';
+      case 'updated_at':
+        return 'font-mono text-slate-400';
       default: // Описание and any others
         return 'text-slate-400';
     }
@@ -57,13 +86,13 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
           </div>
           
           {stage.details && (
-               <div className="space-y-4">
+               <div className="space-y-3 mt-5 pt-5 border-t border-slate-700/60">
                   {stage.details.map((detail, i) => {
                     if (typeof detail === 'string') {
                       return (
-                        <div key={i} className="flex items-start">
-                            <CheckCircleIcon className="w-5 h-5 text-green-400 mr-3 mt-0.5 shrink-0" />
-                            <span className="text-slate-300">{detail}</span>
+                        <div key={i} className="flex items-start bg-slate-900/50 p-3 rounded-md border border-slate-700/80">
+                            <CheckCircleIcon className="w-5 h-5 text-green-400 mr-3 mt-1 shrink-0" />
+                            <p className="text-slate-300 leading-relaxed">{renderWithInlineCode(detail)}</p>
                         </div>
                       );
                     }
@@ -78,34 +107,36 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
           )}
 
           {stage.table && (
-            <div className="bg-slate-900/40 rounded-lg p-4 border border-slate-700/80">
+            <div className="bg-slate-900/40 rounded-lg border border-slate-700/80 overflow-hidden">
               {canSearch && (
-                <div className="mb-4 relative">
-                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <SearchIcon className="w-5 h-5 text-slate-400" />
-                  </span>
-                   <input
-                    type="search"
-                    placeholder="Фильтр по таблице..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"
-                    aria-label="Фильтр по таблице"
-                  />
+                <div className="p-4 border-b border-slate-700/80">
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <SearchIcon className="w-5 h-5 text-slate-400" />
+                    </span>
+                    <input
+                      type="search"
+                      placeholder="Фильтр по таблице..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"
+                      aria-label="Фильтр по таблице"
+                    />
+                  </div>
                 </div>
               )}
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-base border-collapse">
-                  <thead className="bg-slate-900/50 hidden md:table-header-group">
+                  <thead className="bg-slate-800/60 hidden md:table-header-group">
                     <tr>
                       {stage.table.headers.map((header, index) => (
-                        <th key={index} className="p-3 font-semibold border-b border-slate-700 text-slate-400">{header}</th>
+                        <th key={index} className="p-3 font-semibold border-b border-slate-700 text-slate-300 uppercase text-xs tracking-wider">{header}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {filteredRows.map((row, rowIndex) => (
-                      <tr key={rowIndex} className="block md:table-row mb-4 md:mb-0 border md:border-0 md:border-b border-slate-700 rounded-lg md:rounded-none hover:bg-slate-700/40 transition-colors duration-200">
+                      <tr key={rowIndex} className="block md:table-row mb-4 md:mb-0 border md:border-0 md:border-b border-slate-700 rounded-lg md:rounded-none md:odd:bg-slate-800/40 hover:bg-slate-700/40 transition-colors duration-200">
                         {row.map((cell, cellIndex) => {
                           const header = stage.table?.headers[cellIndex];
 
@@ -143,7 +174,7 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
                   </tbody>
                 </table>
                  {filteredRows.length === 0 && searchTerm && (
-                    <p className="text-center text-slate-400 mt-4">Совпадений не найдено.</p>
+                    <p className="text-center text-slate-400 p-4">Совпадений не найдено.</p>
                 )}
               </div>
             </div>

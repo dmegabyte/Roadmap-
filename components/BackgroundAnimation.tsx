@@ -58,7 +58,7 @@ const BackgroundAnimation: React.FC = () => {
                 this.size = Math.random() * 1.5 + 1;
                 this.speedX = (Math.random() * 2 - 1) * 0.1;
                 this.speedY = (Math.random() * 2 - 1) * 0.1;
-                this.maxLife = Math.random() * 1200 + 900; // Lifespan in frames (approx 15-35 seconds)
+                this.maxLife = Math.random() * 2000 + 500; // Lifespan in frames (approx 8-42 seconds)
                 this.life = this.maxLife;
                 this.opacity = 0;
             }
@@ -125,7 +125,7 @@ const BackgroundAnimation: React.FC = () => {
 
         const connectParticles = () => {
             if (!ctx) return;
-            const connectionDistance = 120;
+            const connectionDistance = 280;
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
                     const p1 = particles[i];
@@ -141,7 +141,7 @@ const BackgroundAnimation: React.FC = () => {
                         const lineOpacityFactor = 1 - distance / connectionDistance;
                         const combinedOpacity = Math.min(p1.opacity, p2.opacity) * lineOpacityFactor;
                         
-                        ctx.strokeStyle = `rgba(139, 92, 246, ${combinedOpacity * 0.78})`;
+                        ctx.strokeStyle = `rgba(139, 92, 246, ${combinedOpacity * 0.2})`;
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
