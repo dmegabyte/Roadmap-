@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon } from './Icons';
-import { disclaimerData } from '../data/roadmapData';
+import { disclaimerData } from '../src/data/roadmapData';
 
 // Helper function to parse and style simple markdown like **bold**
 const parseSimpleMarkdown = (text: string) => {

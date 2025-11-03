@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon, InformationCircleIcon, UsersIcon, TargetIcon, CheckCircleIcon, AutomationIcon } from './Icons';
 import DialogueFlow from './DialogueFlow';
-import { productStrategyData } from '../data/roadmapData';
+import { productStrategyData } from '../src/data/roadmapData';
 import { PrioritizationItem } from '../types';
 
 const Section: React.FC<{ title: string; icon: React.ComponentType<{ className?: string }>; children: React.ReactNode }> = ({ title, icon: Icon, children }) => (

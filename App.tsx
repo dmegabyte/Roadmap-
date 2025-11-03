@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, Suspense, lazy } from 'react';
 import Header from './components/Header';
-import { roadmapData } from './data/roadmapData';
+import { roadmapData } from './src/data/roadmapData';
 import BackgroundAnimation from './components/BackgroundAnimation';
 
 const Disclaimer = lazy(() => import('./components/Disclaimer'));
