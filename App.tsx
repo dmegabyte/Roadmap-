@@ -1,8 +1,10 @@
+
 import React, { useState, useRef, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import { roadmapData } from './data/roadmapData';
 import BackgroundAnimation from './components/BackgroundAnimation';
 
+const Disclaimer = lazy(() => import('./components/Disclaimer'));
 const ProductStrategy = lazy(() => import('./components/ProductStrategy'));
 const Roadmap = lazy(() => import('./components/Roadmap'));
 
@@ -59,6 +61,9 @@ const App: React.FC = () => {
       >
         <main className="container mx-auto px-4 py-8 md:py-16 space-y-12">
           <Header />
+          <Suspense fallback={<LoadingFallback message="Загрузка..." />}>
+            <Disclaimer />
+          </Suspense>
           <Suspense fallback={<LoadingFallback message="Загрузка стратегии..." />}>
             <ProductStrategy onNavigate={handleNavigateToStage} />
           </Suspense>

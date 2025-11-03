@@ -101,3 +101,17 @@ export interface ProductStrategyContent {
     items: Kpi[];
   };
 }
+
+export interface DisclaimerContent {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  sections: {
+    title: string;
+    icon: React.ComponentType<{ className?: string }>;
+    content: {
+      type: 'paragraph' | 'list';
+      text?: string;
+      items?: string[];
+    }[];
+  }[];
+}

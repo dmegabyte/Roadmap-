@@ -40,8 +40,8 @@ const Roadmap: React.FC<RoadmapProps> = ({ data, activeQuarterId, onQuarterSelec
             </h2>
           </div>
 
-          <div className="md:grid md:grid-cols-12 md:gap-8">
-            <div className="md:col-span-4 lg:col-span-3 mb-6 md:mb-0">
+          <div className="md:grid md:grid-cols-12 md:gap-8 md:items-start">
+            <div className="md:col-span-4 lg:col-span-3 mb-6 md:mb-0 md:sticky md:top-8">
               <h3 id="stage-list-heading" className="text-xl font-semibold text-white mb-3">Этапы квартала</h3>
               <nav className="space-y-2" aria-labelledby="stage-list-heading">
                 {activeQuarter.stages.map((stage, index) => {
