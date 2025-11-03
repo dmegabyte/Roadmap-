@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 
 interface TimelineProps {
@@ -40,7 +39,7 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
   const progressPercentage = (activeIndex * itemWidthPercentage) + (itemWidthPercentage / 2);
 
   return (
-    <nav aria-label="Временная шкала кварталов" className="w-full px-4 pt-8 pb-12">
+    <nav aria-label="Временная шкала кварталов" className="w-full p-8">
       <div className="relative">
         {/* Timeline track */}
         <div className="absolute top-4 left-0 w-full h-1 bg-slate-700 rounded-full"></div>
@@ -68,7 +67,11 @@ const Timeline: React.FC<TimelineProps> = ({ activeQuarterId, onQuarterSelect, t
               >
                 <button
                   onClick={() => onQuarterSelect(q.id)}
-                  className="w-full group flex flex-col items-center p-2 rounded-lg transition-colors hover:bg-slate-700/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-sky-400"
+                  className={`w-[calc(100%-0.5rem)] group flex flex-col items-center p-2 rounded-xl transition-all duration-300 border ${
+                    isActive
+                      ? 'border-transparent bg-sky-400/10 shadow-inner shadow-sky-400/20'
+                      : 'border-transparent hover:bg-slate-700/30'
+                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-sky-400`}
                   aria-current={isActive ? 'step' : undefined}
                   aria-controls="quarter-content-panel"
                 >
