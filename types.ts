@@ -45,7 +45,6 @@ export interface Stage {
 export interface Quarter {
   id: number;
   title: string;
-  shortTitle: string;
   stages: Stage[];
 }
 

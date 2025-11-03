@@ -32,7 +32,7 @@ const Roadmap: React.FC<RoadmapProps> = ({ data, activeQuarterId, onQuarterSelec
           id="quarter-content-panel" 
           role="region" 
           aria-live="polite" 
-          className="p-6 pt-0 animate-fade-in border-t border-slate-700/80 relative z-10"
+          className="p-6 pt-0 animate-fade-in relative z-10"
         >
           <div className="mt-20 mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-sky-400">
