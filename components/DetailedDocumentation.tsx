@@ -1,8 +1,8 @@
-
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { DetailedContent } from '../types';
-import CodeSnippet from './CodeSnippet';
 import { CheckCircleIcon } from './Icons';
+
+const CodeSnippet = lazy(() => import('./CodeSnippet'));
 
 interface DetailedDocumentationProps {
   content: DetailedContent;
@@ -62,7 +62,11 @@ const DetailedDocumentation: React.FC<DetailedDocumentationProps> = ({ content }
                 <ArchitectureDiagram steps={section.architecture.steps} />
             )}
 
-            {section.type === 'code' && section.codeSnippet && <CodeSnippet snippet={section.codeSnippet} />}
+            {section.type === 'code' && section.codeSnippet && (
+              <Suspense fallback={<div className="mt-4 h-32 rounded-lg bg-slate-900/70 border border-slate-700 flex items-center justify-center text-slate-400 animate-pulse">Загрузка примера кода...</div>}>
+                <CodeSnippet snippet={section.codeSnippet} />
+              </Suspense>
+            )}
 
             {section.type === 'list' && section.list && (
                 <ul className="space-y-3">

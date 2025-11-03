@@ -1,10 +1,10 @@
 import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { Stage } from '../types';
-import CodeSnippet from './CodeSnippet';
 import { SearchIcon, CheckCircleIcon, DocsIcon } from './Icons';
 import DetailedDocumentation from './DetailedDocumentation';
 
 const Modal = lazy(() => import('./Modal'));
+const CodeSnippet = lazy(() => import('./CodeSnippet'));
 
 // Helper function to parse and style simple markdown like **bold**, *italic*, and `code`
 const parseSimpleMarkdown = (text: string) => {
@@ -186,7 +186,11 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
             </div>
           )}
           
-          {stage.codeSnippet && <CodeSnippet snippet={stage.codeSnippet} />}
+          {stage.codeSnippet && (
+            <Suspense fallback={<div className="mt-4 h-32 rounded-lg bg-slate-900/70 border border-slate-700 flex items-center justify-center text-slate-400 animate-pulse">Загрузка примера кода...</div>}>
+              <CodeSnippet snippet={stage.codeSnippet} />
+            </Suspense>
+          )}
           
           {stage.detailedContent && (
             <div>
