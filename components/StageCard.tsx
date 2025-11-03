@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { Stage } from '../types';
 import CodeSnippet from './CodeSnippet';
@@ -85,28 +84,28 @@ const StageCard: React.FC<StageCardProps> = ({ stage }) => {
         <div className="space-y-6">
           <div className="space-y-4">
             {stage.description.map((desc, i) => (
-              <p key={i} className="text-lg text-slate-300 leading-loose">{parseSimpleMarkdown(desc)}</p>
+              <p key={i} className="text-lg text-slate-300 leading-relaxed">{parseSimpleMarkdown(desc)}</p>
             ))}
           </div>
           
           {stage.details && (
-               <div className="space-y-6 mt-5 pt-5 border-t border-slate-700/60">
+               <div className="space-y-4 mt-5 pt-5 border-t border-slate-700/60">
                   {stage.details.map((detail, i) => {
                     if (typeof detail === 'string') {
                       return (
                         <div key={i} className="flex items-start bg-slate-900/50 p-3 rounded-md border border-slate-700/80">
                             <CheckCircleIcon className="w-5 h-5 text-green-400 mr-3 mt-1 shrink-0" />
-                            <p className="text-lg text-slate-300 leading-loose">{parseSimpleMarkdown(detail)}</p>
+                            <p className="text-lg text-slate-300 leading-relaxed">{parseSimpleMarkdown(detail)}</p>
                         </div>
                       );
                     }
                     return (
                       <div key={i}>
                           <h4 className="text-xl font-semibold text-slate-100 flex items-center gap-x-3">
-                            <span className="w-2 h-2 bg-violet-400 transform rotate-45"></span>
+                            <span className="text-violet-400 text-2xl leading-none select-none -mt-1">♦</span>
                             {detail.title}
                           </h4>
-                          <p className="text-lg text-slate-300 mt-2 leading-loose">{parseSimpleMarkdown(detail.content)}</p>
+                          <p className="text-lg text-slate-300 mt-2 leading-relaxed">{parseSimpleMarkdown(detail.content)}</p>
                       </div>
                     );
                   })}
